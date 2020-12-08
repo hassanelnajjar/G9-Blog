@@ -1,0 +1,22 @@
+{
+  "name": "g9-blog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest --passWithNoTests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GSG-G9/G9-Blog.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GSG-G9/G9-Blog/issues"
+  },
+  "homepage": "https://github.com/GSG-G9/G9-Blog#readme",
+  "dependencies": {
+    "jest": "^26.6.3"
+  }
+}

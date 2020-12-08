@@ -9,11 +9,17 @@ const getComments = require('../src/database/queries/getComments');
 const getCommentsCounts = require('../src/database/queries/getCommentsCounts');
 const getPosts = require('../src/database/queries/getPosts');
 
-test('', () => {
-  const expected = 1;
-  const actual = 1;
-  expect(expected).toBe(actual);
-});
+beforeEach(build);
+
+afterAll(() => connection.end());
+
+test('addComment >> This test will add comment', () => addComment(1, 'alaa', 'Hiiiiiii')
+  .then(() => expect(1).toBe(1))
+  .catch());
+
+test('addPost >> This test will add post', () => addPost('hiiiiii', 'alaa')
+  .then(() => expect(1).toBe(1))
+  .catch());
 
 test('getComments >> This test will return comments data', () => getComments(1)
   .then((result) => {
@@ -37,12 +43,4 @@ test('getPosts >> This test will return posts data', () => getPosts()
     const expected = 5;
     expect(reslen).toBe(expected);
   })
-  .catch());
-
-test('addComment >> This test will add comment', () => addComment(post_id, user_name, text_content)
-  .then(() => expect(1).toBe(1))
-  .catch());
-
-test('addPost >> This test will add post', () => addPost(text_content, user_name)
-  .then(() => expect(1).toBe(1))
   .catch());

@@ -1,22 +1,35 @@
 {
-  "name": "g9-blog",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest --passWithNoTests"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/GSG-G9/G9-Blog.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/GSG-G9/G9-Blog/issues"
-  },
-  "homepage": "https://github.com/GSG-G9/G9-Blog#readme",
-  "dependencies": {
-    "jest": "^26.6.3"
-  }
+	"name": "g9-blog",
+	"version": "1.0.0",
+	"description": "",
+	"main": "index.js",
+	"scripts": {
+		"test": "NODE_ENV='test' jest --passWithNoTests",
+		"dev": "NODE_ENV='development' nodemon src/index.js",
+		"start": "NODE_ENV='production' node src/index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/GSG-G9/G9-Blog.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/GSG-G9/G9-Blog/issues"
+	},
+	"homepage": "https://github.com/GSG-G9/G9-Blog#readme",
+	"dependencies": {
+		"compression": "^1.7.4",
+		"env2": "^2.2.2",
+		"express": "^4.17.1",
+		"pg": "^8.5.1"
+	},
+	"devDependencies": {
+		"eslint": "^7.15.0",
+		"eslint-config-airbnb-base": "^14.2.1",
+		"eslint-plugin-import": "^2.22.1",
+		"jest": "^26.6.3",
+		"nodemon": "^2.0.6",
+		"supertest": "^6.0.1"
+	}
 }

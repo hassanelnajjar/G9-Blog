@@ -4,10 +4,10 @@
 	"description": "",
 	"main": "index.js",
 	"scripts": {
-		"test": "NODE_ENV='test' jest --passWithNoTests",
-		"dev": "NODE_ENV='development' nodemon src/index.js",
-		"start": "NODE_ENV='production' node src/index.js",
-		"build": "NODE_ENV='development' node src/database/config/build.js"
+		"test": "NODE_ENV=test jest --passWithNoTests",
+		"dev": "NODE_ENV=development nodemon src/index.js",
+		"start": "NODE_ENV=production node src/index.js",
+		"build": "NODE_ENV=development node src/database/config/build.js"
 	},
 	"repository": {
 		"type": "git",

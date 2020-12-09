@@ -49,7 +49,7 @@ const handleCommentClick = (postId) => {
       throw Error();
     })
     .catch(() => { postCommentsContainer.innerText = 'No Post ...!'; });
-  fetch(`/api/v1/${postId}/comments`)
+  fetch(`/api/v1/comments/${postId}`)
     .then((res) => res.json())
     .then((results) => {
       if (results.status === 200) {

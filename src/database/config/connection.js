@@ -1,6 +1,7 @@
 const { Pool } = require('pg');
 require('env2')('./config.env');
 
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 let db_url = '';
 switch (process.env.NODE_ENV) {
   case 'production':

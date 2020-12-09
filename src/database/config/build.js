@@ -6,5 +6,4 @@ const bulidDb = () => {
   const sql = readFileSync(join(__dirname, 'build.sql')).toString();
   return connection.query(sql);
 };
-
 module.exports = bulidDb;

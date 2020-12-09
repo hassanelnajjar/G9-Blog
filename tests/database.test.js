@@ -14,49 +14,52 @@ const { getPosts } = require('../src/database/queries/getPosts');
 // @ts-ignore
 // @ts-ignore
 // @ts-ignore
-beforeEach(() => build());
-
-// @ts-ignore
-afterAll(() => connection.end());
-
-// @ts-ignore
-test('addComment >> This test will add comment', () => addComment('Hiiiiiii', 1, 1)
+describe('Test Database functions', () => {
   // @ts-ignore
-  .then(() => expect(1).toBe(1))
-  .catch());
+  beforeEach(() => build());
 
-// @ts-ignore
-test('addPost >> This test will add post', () => addPost('hiiiiii', 1)
   // @ts-ignore
-  .then(() => expect(1).toBe(1))
-  .catch());
+  afterAll(() => connection.end());
 
-// @ts-ignore
-test('getComments >> This test will return comments data', () => getComments(1)
-  .then((result) => {
-    const reslen = result.rows.length;
-    const expected = 1;
-    // @ts-ignore
-    expect(reslen).toBe(expected);
-  })
-  .catch());
+  // @ts-ignore
+  test('getComments >> This test will return comments data', () => getComments(1)
+    .then((result) => {
+      const reslen = result.rows.length;
+      const expected = 1;
+      // @ts-ignore
+      expect(reslen).toBe(expected);
+    })
+    .catch());
 
-// @ts-ignore
-test('getCommentsCounts >> This test will return comments count', () => getCommentsCounts(1)
-  .then((result) => {
-    const reslen = result.rowCount;
-    const expected = 1;
-    // @ts-ignore
-    expect(reslen).toBe(expected);
-  })
-  .catch());
+  // @ts-ignore
+  test('getCommentsCounts >> This test will return comments count', () => getCommentsCounts(1)
+    .then((result) => {
+      const reslen = result.rowCount;
+      const expected = 1;
+      // @ts-ignore
+      expect(reslen).toBe(expected);
+    })
+    .catch());
 
-// @ts-ignore
-test('getPosts >> This test will return posts data', () => getPosts()
-  .then((result) => {
-    const reslen = result.rows.length;
-    const expected = 2;
-    // @ts-ignore
-    expect(reslen).toBe(expected);
-  })
-  .catch());
+  // @ts-ignore
+  test('getPosts >> This test will return posts data', () => getPosts()
+    .then((result) => {
+      const reslen = result.rows.length;
+      const expected = 2;
+      // @ts-ignore
+      expect(reslen).toBe(expected);
+    })
+    .catch());
+
+  // @ts-ignore
+  test('addComment >> This test will add comment', () => addComment('Hiiiiiii', 1, 1)
+  // @ts-ignore
+    .then(() => expect(1).toBe(1))
+    .catch());
+
+  // @ts-ignore
+  test('addPost >> This test will add post', () => addPost('hiiiiii', 1)
+  // @ts-ignore
+    .then(() => expect(1).toBe(1))
+    .catch());
+});

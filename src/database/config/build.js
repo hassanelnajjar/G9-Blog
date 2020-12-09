@@ -7,7 +7,4 @@ const bulidDb = () => {
   return connection.query(sql);
 };
 
-bulidDb()
-  .then(() => console.log('success'))
-  .catch((err) => console.log(err));
 module.exports = bulidDb;

@@ -16,10 +16,10 @@ switch (process.env.NODE_ENV) {
     break;
 
   default:
-    throw new Error(' No database url ');
+    throw new Error('No Database ...');
 }
 
-db_url = process.env.DEV_DB_URL;
+//
 
 const options = {
   connectionString: db_url,

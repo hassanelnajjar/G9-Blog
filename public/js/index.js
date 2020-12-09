@@ -60,21 +60,17 @@ const handleCommentClick = (postId) => {
     })
     .catch(() => { postCommentsContainer.innerText = 'No Post ...!'; });
 };
-const data = [{
-  id: 1, textContent: 'hello', username: 'hassan', timestamp: '5/5/2020',
-}];
-postsContainer.append(...data.map(createPosts));
 
-// fetch('/api/v1/posts')
-//   .then((res) => res.json())
-//   .then((results) => {
-//     if (results.status === 200) {
-//       const { data } = results;
-//       postsContainer.append(...data.map(createPosts));
-//     }
-//     throw Error();
-//   })
-//   .catch(() => { postsContainer.innerText = 'No Data ...!'; });
+fetch('/api/v1/posts')
+  .then((res) => res.json())
+  .then((results) => {
+    if (results.status === 200) {
+      const { data } = results;
+      postsContainer.append(...data.map(createPosts));
+    }
+    throw Error();
+  })
+  .catch(() => { postsContainer.innerText = 'No Data ...!'; });
 
 // Custom File Input :-
 // const postImgSrc = document.getElementById('post-img-src');

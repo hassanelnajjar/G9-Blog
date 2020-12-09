@@ -29,3 +29,4 @@ post_id INTEGER REFERENCES posts(id)
 INSERT INTO comments (comment_text_content,users_id,post_id) VALUES ('Hello',1,1),('Goodluck',2,2),('See you',1,2);
 
 COMMIT;
+

@@ -1,6 +1,6 @@
 const router = require('express').Router();
 const {
-  addComment, getUserId, addUserName, addPost, getPosts, getComments,
+  addComment, getUserId, addUserName, addPost, getPosts, getComments, getPostsById,
 } = require('../database/queries');
 
 // get all posts
@@ -10,6 +10,16 @@ router.get('/posts', (req, res, next) => {
     status: 200,
     msg: 'success',
   })).catch(next);
+});
+
+router.get('/posts/:postId', (req, res, next) => {
+  getPostsById(+req.params.postId).then((results) => {
+    res.json({
+      data: results.rows,
+      status: 200,
+      msg: 'success',
+    });
+  }).catch(next);
 });
 
 // get Comments for specific post
@@ -47,6 +57,7 @@ router.post('/add-comment/:postId/:username', (req, res, next) => {
 
 // add post
 router.post('/add-post', (req, res, next) => {
+  console.log(req.body);
   getUserId(req.body.username)
     .then((usernameId) => {
       if (usernameId.rows.length !== 0) {
@@ -60,8 +71,8 @@ router.post('/add-post', (req, res, next) => {
         return;
       }
       // eslint-disable-next-line max-len
-      addUserName(req.params.username).then((usernameId) => {
-        addPost(req.body.text_content, usernameId.rows[0].id)
+      addUserName(req.body.username).then((newUserNameId) => {
+        addPost(req.body.text_content, newUserNameId.rows[0].id)
           .then(() => res.status(200).json({
             data: null,
             msg: 'success',

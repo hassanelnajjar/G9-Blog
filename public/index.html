@@ -5,10 +5,54 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>G9 Blog</title>
+  <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
   <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
+  <header>
+    <nav>
+      <div class="container">
+        <div><a href="#">Home</a></div>
+        <div>
+          <ul>
+            <li><a href="#">Hassan</a></li>
+            <li><a href="#">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <section id="add-post-section">
+    <div class='container card'>
+      <form class='add-post-form cardBody'>
+        <div class="row-group">
+          <label for="username">User Name</label>
+          <input class="form-control" type="text" name="username" id="username" placeholder="Enter your user name ">
+        </div>
+        <div class="row-group">
+          <label for="text-content">Post Content</label>
+          <textarea class="form-control" name="text-content" id="text-content" cols="30" rows="5"></textarea>
+        </div>
+        <div class="row-group">
+          <input class="form-control submit" id="submit-button" type="button" value="Add Post">
+        </div>
+      </form>
+    </div>
+  </section>
+  <section id="posts-section">
+    <main>
+      <div id="posts-container" class="container">
+      </div>
+    </main>
+  </section>
+
+  <section id="comments-section">
+    <div id="post-comments-container" class="container">
+    </div>
+  </section>
+
   <script src="./js/render.js"></script>
   <script src="./js/index.js"></script>
 </body>

@@ -6,7 +6,8 @@ const build = require('../src/database/config/build');
 const connection = require('../src/database/config/connection');
 
 describe('Test Routes', () => {
-  beforeEach(() => build());
+  beforeEach(() => build('schema').then(() => build('testData')));
+
   afterAll(() => connection.end());
   test('GET /api/v1/posts', (done) => request(app)
     .get('/api/v1/posts')

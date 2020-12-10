@@ -1,94 +1,96 @@
-const router = require('express').Router();
+/* eslint-disable camelcase */
 const {
-  addComment, getUserId, addUserName, addPost, getPosts, getComments, getPostsById,
+  addComment,
+  getUserId,
+  addUserName,
+  addPost,
+  getPosts,
+  getComments,
+  getPostsById,
+  deletePost,
 } = require('../database/queries');
-
 // get all posts
-router.get('/posts', (req, res, next) => {
-  getPosts().then((results) => res.json({
-    data: results.rows,
-    status: 200,
-    msg: 'success',
-  })).catch(next);
-});
-
-router.get('/posts/:postId', (req, res, next) => {
-  getPostsById(+req.params.postId).then((results) => {
-    res.json({
+module.exports.getPostRouter = (req, res, next) => {
+  getPosts()
+    .then((results) => res.json({
       data: results.rows,
       status: 200,
       msg: 'success',
-    });
-  }).catch(next);
-});
-
+    }))
+    .catch(next);
+};
+// get post by post id
+module.exports.getPostsByIdRouter = (req, res, next) => {
+  getPostsById(+req.params.postId)
+    .then((results) => {
+      res.json({
+        data: results.rows,
+        status: 200,
+        msg: 'success',
+      });
+    })
+    .catch(next);
+};
 // get Comments for specific post
-router.get('/comments/:postId', (req, res, next) => {
+module.exports.getCommentsRouter = (req, res, next) => {
   getComments(req.params.postId)
     .then((results) => res.json({
       data: results.rows,
       status: 200,
       msg: 'success',
-    })).catch(next);
-});
-
-// add Comments
-router.post('/add-comment/:postId/:username', (req, res, next) => {
-  getUserId(req.params.username)
-    .then((usernameId) => {
-      if (usernameId.rows.length !== 0) {
-        // eslint-disable-next-line max-len
-        addComment(req.body.text_content, usernameId.rows[0].id, req.params.postId).then(({ rows }) => res.status(200).json({
-          data: rows,
-          msg: 'success',
-          status: 200,
-        })).catch(next);
-        return;
-      }
-      // eslint-disable-next-line max-len
-      addUserName(req.params.username).then((userNameId) => addComment(req.body.text_content, userNameId.rows[0].id, req.params.postId).then(() => res.status(200).json({
-        data: null,
-        msg: 'success',
-        status: 200,
-      })).catch(next));
-    })
+    }))
     .catch(next);
-});
-
-// add post
-router.post('/add-post', (req, res, next) => {
+};
+// add Comments
+module.exports.addCommentRouter = (req, res, next) => {
+  const { username, postId } = req.params;
   console.log(req.body);
+  const { text_content } = req.body;
+  getUserId(username)
+    .then((usernameId) => {
+      if (!usernameId.rowCount) {
+        return addUserName(username);
+      }
+      return usernameId;
+    })
+    .then(({ rows }) => addComment(
+      text_content,
+      rows[0].id,
+      +postId,
+    ))
+    .then(({ rows }) => res.status(200).json({
+      data: rows,
+      msg: 'success',
+      status: 200,
+    }))
+    .catch(next);
+};
+// add post
+module.exports.addPostRouter = (req, res, next) => {
+  const { username, text_content } = req.body;
   getUserId(req.body.username)
     .then((usernameId) => {
-      if (usernameId.rows.length !== 0) {
-        // eslint-disable-next-line max-len
-        addPost(req.body.text_content, usernameId.rows[0].id)
-          .then(({ rows }) => res.status(200).json({
-            data: rows,
-            msg: 'success',
-            status: 200,
-          })).catch(next);
-        return;
+      if (!usernameId.rowCount) {
+        return addUserName(username);
       }
-      // eslint-disable-next-line max-len
-      addUserName(req.body.username).then((newUserNameId) => {
-        addPost(req.body.text_content, newUserNameId.rows[0].id)
-          .then(() => res.status(200).json({
-            data: null,
-            msg: 'success',
-            status: 200,
-          })).catch(next);
-      }).catch(next);
-    }).catch(next);
-});
-
-router.use((err, req, res, next) => {
-  console.log(err);
-  res.status(500).json({
-    status: err.status || 500,
-    msg: err.msg || 'Internal Server Error',
-    data: null,
-  });
-});
-
-module.exports = router;
+      return usernameId;
+    })
+    .then(({ rows }) => addPost(text_content, rows[0].id))
+    .then(({ rows }) => res.status(200).json({
+      data: rows,
+      msg: 'success',
+      status: 200,
+    }))
+    .catch(next);
+};
+// delete post
+module.exports.deletePostRouter = (req, res, next) => {
+  const { postId } = req.body;
+  deletePost(postId)
+    .then(() => res.json({
+      data: null,
+      msg: 'success',
+      status: 200,
+    }))
+    .catch(next);
+};

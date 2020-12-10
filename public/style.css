@@ -73,6 +73,7 @@
   width: 100%;
   margin-bottom: 1rem;
   border-radius: 0.25rem;
+  position: relative;
 }
 
 .posts-post-comment-footer{
@@ -122,7 +123,7 @@
   border-radius: .25rem;
   transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 }
-.submit
+.submit,.delete-button,.send-comment-button
   {
     display: inline-block;
     font-weight: 400;
@@ -199,4 +200,37 @@
 
   .comment-background{
     background:#F6F8FA;
+  }
+
+  .delete-button{
+    position: absolute;
+    background:rgb(255, 0, 0,0.50);
+    top:0;
+    right:0 
+  }
+
+  .send-comment-button{
+    position: absolute;
+    top:0;
+    right:0 
+  }
+  #post-comments-container{
+    margin-top: 10rem;
+  }
+
+  .add-comment-div{
+    width: 100%;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+  .add-comment-form{
+    display: flex;
+    flex-direction: column;
+  }
+  .user-name-input{
+    width: 50%;
+  }
+
+  .add-comment-text-area{
+    resize: none;
   }

@@ -16,7 +16,7 @@ const { getPosts } = require('../src/database/queries/getPosts');
 // @ts-ignore
 describe('Test Database functions', () => {
   // @ts-ignore
-  beforeEach(() => build());
+  beforeEach(() => build('schema').then(() => build('testData')));
 
   // @ts-ignore
   afterAll(() => connection.end());

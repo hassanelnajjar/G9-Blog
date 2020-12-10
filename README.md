@@ -9,8 +9,6 @@ Demo : [G9-Blog](https://g9-blog.herokuapp.com/)
 - Hassan Alnajjar
 - Khamis Hesham
 - Sondos Alalami
-- 
-
 ### Purpose
 
 This website is a blog for our community to make interaction between G9 cohort members
@@ -29,14 +27,14 @@ This website is a blog for our community to make interaction between G9 cohort m
 - Front End : DOM manipulation, fetch requests
 - Back End :
     
-    Database building
-    queries handling
-    routers handling
-    server building
-    tests
+    - Database building
+    - queries handling
+    - routers handling
+    - server building
+    - tests
 
 
-### User story
+### User Journey
 
 - User will open the website and all the previous posts will be displayed for him. Each post includes with the user who wrote each post, the date of the post, and the comments of that post and their count.
 - User can also add a post with inserting his name first.

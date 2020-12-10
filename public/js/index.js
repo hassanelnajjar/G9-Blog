@@ -94,7 +94,7 @@ const handleCommentClick = (id) => {
 fetch('/api/v1/posts')
   .then((res) => res.json())
   .then((results) => {
-    if (results.status == 200) {
+    if (results.status === 200) {
       const { data } = results;
       postsContainer.append(...data.map((el) => createPosts(el.id, el.post_text, el.user_name, el.posted_at_time)));
       return;

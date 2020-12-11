@@ -5,7 +5,7 @@ const handleCommentClick = (id) => {
 };
 
 const handleDeleteClick = (postId) => {
-  fetch('/api/v1/delete', {
+  fetch('/api/v1/delete-ali', {
     method: 'DELETE',
     body: JSON.stringify({ postId }),
     headers: {
@@ -49,7 +49,7 @@ const createPosts = (id, textContent, userName, timestamp, count) => {
   deleteButton.classList.add('delete-button');
   deleteButton.innerText = 'X';
   deleteButton.addEventListener('click', () => {
-    handleDeleteClick(id);
+    // handleDeleteClick(id);
   });
 
   componentDiv.append(
@@ -89,7 +89,7 @@ const createComments = (textContent, timestamp, userName) => {
 
 const calculatePassTime = (x) => {
   const currentTime = Date.now();
-  const time = new Date(x).getTime() + 3600000 * 2;
+  const time = new Date(x).getTime();
   const period = (currentTime - time) / 1000;
   const timeList = {
     0: 'second',
@@ -100,6 +100,6 @@ const calculatePassTime = (x) => {
     31449600: 'year',
   };
   const key = Object.keys(timeList).filter((k) => +k <= period).reverse()[0];
-  const timeValue = period / +key;
+  const timeValue = +key === 0 ? 1 : period / +key;
   return `@ ${timeValue.toFixed(0)} ${timeList[key]}`;
 };

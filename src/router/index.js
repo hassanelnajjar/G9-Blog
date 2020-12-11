@@ -14,7 +14,7 @@ router.get('/posts/:postId', getPostsByIdRouter);
 router.get('/comments/:postId', getCommentsRouter);
 router.post('/add-comment/:postId/:username', addCommentRouter);
 router.post('/add-post', addPostRouter);
-router.delete('/delete', deletePostRouter);
+router.delete('/delete-ali', deletePostRouter);
 
 router.use((err, req, res, next) => {
   const status = err.status || 500;

@@ -1,13 +1,15 @@
 const express = require('express');
 const compression = require('compression');
 const { join } = require('path');
-const morgan = require('morgan');
 
 const router = require('./router');
 
 const app = express();
 app.disable('x-powered-by');
-app.use(morgan('dev'));
+if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
+  const morgan = require('morgan');
+  app.use(morgan('dev'));
+}
 app.use(compression());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));

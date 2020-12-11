@@ -20,4 +20,4 @@ switch (NODE_ENV) {
 buildDb('schema')
   .then(() => buildDb(dataBaseFilePath))
   .then(() => console.log('dataBase Created ...'))
-  .catch(() => console.log('dataBase Failed ...'));
+  .catch((err) => console.log('dataBase Failed ...', err));

@@ -44,7 +44,6 @@ module.exports.getCommentsRouter = (req, res, next) => {
 // add Comments
 module.exports.addCommentRouter = (req, res, next) => {
   const { username, postId } = req.params;
-  console.log(req.body);
   const { text_content } = req.body;
   getUserId(username)
     .then((usernameId) => {
@@ -68,7 +67,8 @@ module.exports.addCommentRouter = (req, res, next) => {
 // add post
 module.exports.addPostRouter = (req, res, next) => {
   const { username, text_content } = req.body;
-  getUserId(req.body.username)
+  console.log(req.body);
+  getUserId(username)
     .then((usernameId) => {
       if (!usernameId.rowCount) {
         return addUserName(username);
@@ -76,11 +76,13 @@ module.exports.addPostRouter = (req, res, next) => {
       return usernameId;
     })
     .then(({ rows }) => addPost(text_content, rows[0].id))
-    .then(({ rows }) => res.status(200).json({
-      data: rows,
-      msg: 'success',
-      status: 200,
-    }))
+    .then(({ rows }) => {
+      res.status(200).json({
+        data: rows,
+        msg: 'success',
+        status: 200,
+      });
+    })
     .catch(next);
 };
 // delete post

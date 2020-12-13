@@ -24,12 +24,11 @@ app.get('/home', checkUser, (req, res) => {
   res.sendFile(join(__dirname, '..', 'public', 'home.html'));
 });
 
-app.get('/login', (req, res) => {
-  res.sendFile(join(__dirname, '..', 'public', 'login.html'));
-});
-
 app.get('/register', (req, res) => {
   res.sendFile(join(__dirname, '..', 'public', 'register.html'));
+});
+app.get(['/', '/login'], (req, res) => {
+  res.sendFile(join(__dirname, '..', 'public', 'login.html'));
 });
 
 app.use('/api/v1/', router);

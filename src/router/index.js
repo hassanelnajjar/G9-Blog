@@ -33,6 +33,7 @@ router.post('/login', loginFunction);
 router.post('/register', register);
 
 router.use((err, req, res, next) => {
+  console.log(err);
   const status = err.status || 500;
   res.status(status).json({
     status,

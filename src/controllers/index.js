@@ -133,7 +133,7 @@ module.exports.loginFunction = (req, res, next) => {
   if (errors.length > 0) {
     return res.json(errors).redirect('/login');
   }
-  return getUserByEmail(userEmail)
+  getUserByEmail(userEmail)
     .then((result) => {
       if (!result.rowCount) {
         const err = new Error();
@@ -145,16 +145,17 @@ module.exports.loginFunction = (req, res, next) => {
     })
     .then((result) => {
       const storedPassword = result.rows[0].user_password;
-      validate(userPassword, storedPassword).then((results) => {
-        if (!results) {
-          const err = new Error();
-          err.status = 401;
-          err.msg = 'Password incorrect';
-          throw err;
-        }
-        const token = jwtSign({ userID: result.rows[0].id });
-        res.cookie('userToken', token).redirect('/home');
-      });
+      const userID = result.rows[0].id;
+      return Promise.all([validate(userPassword, storedPassword), Promise.resolve(userID)]);
+    }).then((results) => {
+      if (!results[0]) {
+        const err = new Error();
+        err.status = 401;
+        err.msg = 'Password incorrect';
+        throw err;
+      }
+      const token = jwtSign({ userID: results[1] });
+      res.cookie('userToken', token).redirect('/home');
     })
     .catch(next);
 };

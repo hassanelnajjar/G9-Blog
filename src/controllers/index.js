@@ -1,5 +1,14 @@
 /* eslint-disable camelcase */
 const {
+  validateLogin,
+  validateRegister,
+  sign,
+  validate,
+  jwtSign,
+  jwtVerify,
+} = require('../utils');
+
+const {
   addComment,
   getUserId,
   addUserName,
@@ -9,6 +18,8 @@ const {
   getPostsById,
   deletePost,
   getUserByEmail,
+  getUserById,
+  addUser,
 } = require('../database/queries');
 // get all posts
 module.exports.getPostRouter = (req, res, next) => {
@@ -53,11 +64,7 @@ module.exports.addCommentRouter = (req, res, next) => {
       }
       return usernameId;
     })
-    .then(({ rows }) => addComment(
-      text_content,
-      rows[0].id,
-      +postId,
-    ))
+    .then(({ rows }) => addComment(text_content, rows[0].id, +postId))
     .then(({ rows }) => res.status(200).json({
       data: rows,
       msg: 'success',
@@ -95,5 +102,92 @@ module.exports.deletePostRouter = (req, res, next) => {
       msg: 'success',
       status: 200,
     }))
+    .catch(next);
+};
+
+module.exports.getUserName = (req, res, next) => {
+  getUserById(req.userID)
+    .then((results) => {
+      if (!results.rowCount) {
+        const err = new Error('');
+        err.status = 404;
+        err.msg = 'user not found';
+        throw err;
+      }
+      return res.send({
+        status: 200,
+        msg: 'success',
+        data: results.rows[0].user_name,
+      });
+    })
+    .catch(next);
+};
+
+module.exports.logoutFunction = (req, res) => {
+  res.clearCookie('userToken').redirect('/login');
+};
+module.exports.loginFunction = (req, res, next) => {
+  const { userEmail, userPassword } = req.body;
+  const errors = validateLogin(userEmail, userPassword);
+
+  if (errors.length > 0) {
+    return res.json(errors).redirect('/login');
+  }
+  return getUserByEmail(userEmail)
+    .then((result) => {
+      if (!result.rowCount) {
+        const err = new Error();
+        err.status = 404;
+        err.msg = 'User not found';
+        throw err;
+      }
+      return result;
+    })
+    .then((result) => {
+      const storedPassword = result.rows[0].user_password;
+      validate(userPassword, storedPassword).then((results) => {
+        if (!results) {
+          const err = new Error();
+          err.status = 401;
+          err.msg = 'Password incorrect';
+          throw err;
+        }
+        const token = jwtSign({ userID: result.rows[0].id });
+        res.cookie('userToken', token).redirect('/home');
+      });
+    })
+    .catch(next);
+};
+
+module.exports.register = (req, res, next) => {
+  const {
+    userName, userEmail, userPassword, userPassword2,
+  } = req.body;
+
+  const errors = validateRegister(
+    userName,
+    userEmail,
+    userPassword,
+    userPassword2,
+  );
+
+  if (errors.length > 0) {
+    return res.redirect('/login');
+  }
+
+  return Promise.all([sign(userPassword), getUserByEmail(userEmail)])
+    .then((results) => {
+      const hashedPassword = results[0];
+      const userID = results[1];
+      if (!userID.rowCount) {
+        return addUser(userName, userEmail, hashedPassword);
+      }
+      const err = new Error('');
+      err.status = 400;
+      err.msg = 'Your already registered';
+      throw err;
+    })
+    .then((userID) => jwtSign({ userID: userID.rows[0] }))
+    .then((token) => res.cookie('userToken', token).redirect('/home'))
     .catch(next);
 };

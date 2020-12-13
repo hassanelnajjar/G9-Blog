@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>login</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <header>
+    <nav>
+      <div class="container">
+        <div><a href="/home">G9 BLOG</a></div>
+        <div>
+          <ul>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/api/v1/logout">Logout</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+  </header>
+  <section id="login-form">
+    <div class='formDiv'>
+      <form action="/api/v1/login" method='POST'>
+        <label for="userEmail">User Email</label>
+        <input type="email" name="userEmail">
+        <label for="userPassword">User Password</label>
+        <input type="password" name="userPassword">
+        <input type="submit" value="login">
+        <a href="/register"><button type="button">register</button></a>
+      </form>
+    </div>
+
+  </section>
+
+</body>
+
+</html>

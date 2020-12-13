@@ -6,6 +6,9 @@ const {
 const getCommentsCounts = require('./getCommentsCounts');
 const addPost = require('./addPost');
 const deletePost = require('./deletePost');
+const getUserByEmail = require('./getUserByEmail');
+const addUser = require('./addUser');
+const getUserById = require('./getUserById');
 
 module.exports = {
   addComment,
@@ -17,4 +20,7 @@ module.exports = {
   getCommentsCounts,
   addPost,
   deletePost,
+  getUserByEmail,
+  addUser,
+  getUserById,
 };

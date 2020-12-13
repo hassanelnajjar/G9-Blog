@@ -35,7 +35,7 @@
   }
   
   header nav ul a{
-    padding-left: 15em;
+    padding-left: 5em;
   }
 
   header ul,header li{
@@ -233,4 +233,19 @@
 
   .add-comment-text-area{
     resize: none;
+  }
+
+  .formDiv{
+    margin: 0 auto;
+  }
+
+  input{
+    line-height: 1.5;
+    font-size: 20px;
+    display: block;
+    border:1px solid rgb(141, 198, 224);
+  }
+
+  #login-form,#register-form{
+    margin-top: 5rem;
   }

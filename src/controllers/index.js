@@ -8,6 +8,7 @@ const {
   getComments,
   getPostsById,
   deletePost,
+  getUserByEmail,
 } = require('../database/queries');
 // get all posts
 module.exports.getPostRouter = (req, res, next) => {

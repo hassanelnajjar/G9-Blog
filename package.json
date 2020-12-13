@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"test": "NODE_ENV=test jest --passWithNoTests  --detectOpenHandles",
-		"dev": "NODE_ENV=development nodemon src/index.js",
+		"dev": "NODE_ENV=development node src/index.js",
 		"start": "NODE_ENV=production node src/index.js",
 		"heroku": "NODE_ENV=production node src/database/config",
 		"buildDev": "NODE_ENV=development node src/database/config",
@@ -23,8 +23,10 @@
 	"homepage": "https://github.com/GSG-G9/G9-Blog#readme",
 	"dependencies": {
 		"compression": "^1.7.4",
+		"cookie-parser": "^1.4.5",
 		"env2": "^2.2.2",
 		"express": "^4.17.1",
+		"jsonwebtoken": "^8.5.1",
 		"pg": "^8.5.1"
 	},
 	"devDependencies": {

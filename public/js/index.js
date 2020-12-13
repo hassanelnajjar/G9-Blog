@@ -4,6 +4,13 @@ const postsContainer = document.getElementById('posts-container');
 const submitButton = document.getElementById('submit-button');
 const username = document.getElementById('username');
 const textContentInput = document.getElementById('text-content');
+const userNameAtDom = document.getElementById('userNameAtDom');
+
+window.addEventListener('load', () => {
+  fetch('api/v1/userName').then((res) => res.json()).then(({ data }) => {
+    userNameAtDom.innerText = data;
+  });
+});
 
 fetch('/api/v1/posts')
   .then((res) => res.json())

@@ -5,7 +5,6 @@ const {
   sign,
   validate,
   jwtSign,
-  jwtVerify,
 } = require('../utils');
 
 const {
@@ -75,7 +74,6 @@ module.exports.addCommentRouter = (req, res, next) => {
 // add post
 module.exports.addPostRouter = (req, res, next) => {
   const { username, text_content } = req.body;
-  console.log(req.body);
   getUserId(username)
     .then((usernameId) => {
       if (!usernameId.rowCount) {
@@ -106,7 +104,8 @@ module.exports.deletePostRouter = (req, res, next) => {
 };
 
 module.exports.getUserName = (req, res, next) => {
-  getUserById(req.userID)
+  const { userID } = req.body;
+  getUserById(userID)
     .then((results) => {
       if (!results.rowCount) {
         const err = new Error('');
@@ -130,10 +129,11 @@ module.exports.loginFunction = (req, res, next) => {
   const { userEmail, userPassword } = req.body;
   const errors = validateLogin(userEmail, userPassword);
 
-  if (errors.length > 0) {
-    return res.json(errors).redirect('/login');
+  if (errors) {
+    const details = errors.details.map((el) => el.message);
+    return res.status(400).json({ data: details, msg: 'fails', status: 400 });
   }
-  getUserByEmail(userEmail)
+  return getUserByEmail(userEmail)
     .then((result) => {
       if (!result.rowCount) {
         const err = new Error();
@@ -146,8 +146,12 @@ module.exports.loginFunction = (req, res, next) => {
     .then((result) => {
       const storedPassword = result.rows[0].user_password;
       const userID = result.rows[0].id;
-      return Promise.all([validate(userPassword, storedPassword), Promise.resolve(userID)]);
-    }).then((results) => {
+      return Promise.all([
+        validate(userPassword, storedPassword),
+        Promise.resolve(userID),
+      ]);
+    })
+    .then((results) => {
       if (!results[0]) {
         const err = new Error();
         err.status = 401;
@@ -172,8 +176,9 @@ module.exports.register = (req, res, next) => {
     userPassword2,
   );
 
-  if (errors.length > 0) {
-    return res.redirect('/login');
+  if (errors) {
+    const details = errors.details.map((el) => el.message);
+    return res.status(400).json({ data: details, msg: 'fails', status: 400 });
   }
 
   return Promise.all([sign(userPassword), getUserByEmail(userEmail)])
@@ -188,7 +193,7 @@ module.exports.register = (req, res, next) => {
       err.msg = 'Your already registered';
       throw err;
     })
-    .then((userID) => jwtSign({ userID: userID.rows[0] }))
+    .then((userID) => jwtSign({ userID: userID.rows[0].id }))
     .then((token) => res.cookie('userToken', token).redirect('/home'))
     .catch(next);
 };

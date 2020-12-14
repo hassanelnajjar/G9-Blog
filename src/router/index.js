@@ -1,12 +1,5 @@
-/* eslint-disable no-useless-catch */
 const router = require('express').Router();
-const jwt = require('jsonwebtoken');
-const crypto = require('crypto');
-const { checkUser } = require('../middlewares');
-const { getUserByEmail, addUser, getUserById } = require('../database/queries');
-
-const { SECRET_KEY } = process.env;
-// @ts-ignore
+const { checkUser } = require('../middleware');
 const {
   getPostRouter,
   getPostsByIdRouter,
@@ -20,12 +13,12 @@ const {
   register,
 } = require('../controllers/index');
 
-router.get('/posts', getPostRouter);
-router.get('/posts/:postId', getPostsByIdRouter);
-router.get('/comments/:postId', getCommentsRouter);
-router.post('/add-comment/:postId/:username', addCommentRouter);
-router.post('/add-post', addPostRouter);
-router.delete('/delete-ali', deletePostRouter);
+router.get('/posts', checkUser, getPostRouter);
+router.get('/posts/:postId', checkUser, getPostsByIdRouter);
+router.get('/comments/:postId', checkUser, getCommentsRouter);
+router.post('/add-comment/:postId/:username', checkUser, addCommentRouter);
+router.post('/add-post', checkUser, addPostRouter);
+router.delete('/delete-ali', checkUser, deletePostRouter);
 
 router.get('/userName', checkUser, getUserName);
 router.get('/logout', checkUser, logoutFunction);

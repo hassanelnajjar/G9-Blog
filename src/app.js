@@ -1,14 +1,18 @@
+/* eslint-disable import/no-extraneous-dependencies */
+/* eslint-disable global-require */
+require('env2')('./config.env');
 const express = require('express');
 const compression = require('compression');
 const { join } = require('path');
 const cookieParser = require('cookie-parser');
 const router = require('./router');
-const { checkUser } = require('./middlewares');
+const { checkUser } = require('./middleware');
 
 const app = express();
 app.use(cookieParser());
 app.disable('x-powered-by');
 app.disable('view cache');
+
 if (process.env.NODE_ENV === 'development' || process.env.NODE_ENV === 'test') {
   const morgan = require('morgan');
   app.use(morgan('dev'));

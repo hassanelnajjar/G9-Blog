@@ -1,11 +1,10 @@
-const jwt = require('jsonwebtoken');
+const { jwtVerify } = require('../utils');
 
 module.exports.checkUser = (req, res, next) => {
   try {
-    const { SECRET_KEY } = process.env;
     const { userToken } = req.cookies;
-    const { userID } = jwt.verify(userToken, SECRET_KEY);
-    req.userID = userID;
+    const { userID } = jwtVerify(userToken);
+    req.body.userID = userID;
     next();
   } catch (err) {
     err.status = 401;

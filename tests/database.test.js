@@ -3,11 +3,9 @@
 // eslint-disable-next-line linebreak-style
 const connection = require('../src/database/config/connection');
 const build = require('../src/database/config/build');
-const addComment = require('../src/database/queries/addComment');
-const addPost = require('../src/database/queries/addPost');
-const getComments = require('../src/database/queries/getComments');
-const getCommentsCounts = require('../src/database/queries/getCommentsCounts');
-const { getPosts } = require('../src/database/queries/getPosts');
+const {
+  addComment, addPost, getComments, getCommentsCounts, getPosts,
+} = require('../src/database/queries');
 
 // @ts-ignore
 // @ts-ignore
@@ -45,7 +43,7 @@ describe('Test Database functions', () => {
   test('getPosts >> This test will return posts data', () => getPosts()
     .then((result) => {
       const reslen = result.rows.length;
-      const expected = 2;
+      const expected = 1;
       // @ts-ignore
       expect(reslen).toBe(expected);
     })

@@ -1,47 +1,29 @@
+const Joi = require('joi');
+
 module.exports.validateRegister = (userName, userEmail, userPassword, userPassword2) => {
-  const errors = [];
-  if (!userName || !userEmail || !userPassword || !userPassword2) {
-    errors.push({
-      data: null,
-      status: 400,
-      msg: 'You need to enter all values',
-    });
-  }
+  const schema = Joi.object().keys({
+    userName: Joi.string().min(3).max(50).required(),
+    userEmail: Joi.string().email().required(),
+    userPassword: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
+    userPassword2: Joi.ref('userPassword'),
+  });
 
-  if (userPassword !== userPassword2) {
-    errors.push({
-      data: null,
-      status: 400,
-      msg: 'Your passwords should be identical',
-    });
-  }
+  const { error } = schema.validate({
+    userName, userEmail, userPassword, userPassword2,
+  });
 
-  if (userPassword < 6) {
-    errors.push({
-      data: null,
-      status: 400,
-      msg: 'Your password should be more than 6 chars',
-    });
-  }
-  return errors;
+  return error;
 };
 
 module.exports.validateLogin = (userEmail, userPassword) => {
-  const errors = [];
-  if (!userEmail || !userPassword) {
-    errors.push({
-      data: null,
-      status: 400,
-      msg: 'You need to enter all values',
-    });
-  }
+  const schema = Joi.object().keys({
+    userEmail: Joi.string().email().required(),
+    userPassword: Joi.string().pattern(new RegExp('^[a-zA-Z0-9]{3,30}$')).required(),
+  });
 
-  if (userPassword < 6) {
-    errors.push({
-      data: null,
-      status: 400,
-      msg: 'Your password should be more than 6 chars',
-    });
-  }
-  return errors;
+  const { error } = schema.validate({
+    userEmail, userPassword,
+  });
+
+  return error;
 };

@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 const buildDb = require('./build');
+require('env2')('./config.env');
 
 let dataBaseFilePath = '';
 const { NODE_ENV } = process.env;

@@ -15,7 +15,7 @@ describe('Test Routes', () => {
     .expect('Content-Type', /json/)
     .end((err, res) => {
       if (err) return done(err);
-      expect(JSON.parse(res.text).data.length).toBe(2);
+      expect(JSON.parse(res.text).data.length).toBe(1);
       done();
     }));
   test('GET /api/v1/comments/:postId', (done) => request(app)
@@ -28,7 +28,7 @@ describe('Test Routes', () => {
       done();
     }));
   test('POST /api/v1/add-comment/:postId/:username', (done) => request(app)
-    .post('/api/v1/add-comment/1/Sondos')
+    .post('/api/v1/add-comment/1/alaa')
     .send({ text_content: 'hi' })
     .expect(200)
     .expect('Content-Type', /json/)
@@ -39,7 +39,7 @@ describe('Test Routes', () => {
     }));
   test('POST /api/v1/add-post', (done) => request(app)
     .post('/api/v1/add-post')
-    .send({ text_content: 'hi', username: 'Sondos' })
+    .send({ text_content: 'hi', username: 'alaa' })
     .expect(200)
     .expect('Content-Type', /json/)
     .end((err, res) => {

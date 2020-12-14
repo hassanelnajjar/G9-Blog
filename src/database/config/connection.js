@@ -19,7 +19,6 @@ switch (NODE_ENV) {
   default:
     throw new Error('No Database ...');
 }
-
 const options = {
   connectionString: dbUrl,
   ssl: NODE_ENV === 'production',

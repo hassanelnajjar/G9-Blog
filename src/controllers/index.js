@@ -5,6 +5,7 @@ const {
   sign,
   validate,
   jwtSign,
+  createCustomError,
 } = require('../utils');
 
 const {
@@ -54,16 +55,10 @@ module.exports.getCommentsRouter = (req, res, next) => {
 };
 // add Comments
 module.exports.addCommentRouter = (req, res, next) => {
-  const { username, postId } = req.params;
+  const { postId } = req.params;
   const { text_content } = req.body;
-  getUserId(username)
-    .then((usernameId) => {
-      if (!usernameId.rowCount) {
-        return addUserName(username);
-      }
-      return usernameId;
-    })
-    .then(({ rows }) => addComment(text_content, rows[0].id, +postId))
+  const { handleUserID } = req;
+  addComment(text_content, handleUserID, +postId)
     .then(({ rows }) => res.status(200).json({
       data: rows,
       msg: 'success',
@@ -73,15 +68,9 @@ module.exports.addCommentRouter = (req, res, next) => {
 };
 // add post
 module.exports.addPostRouter = (req, res, next) => {
-  const { username, text_content } = req.body;
-  getUserId(username)
-    .then((usernameId) => {
-      if (!usernameId.rowCount) {
-        return addUserName(username);
-      }
-      return usernameId;
-    })
-    .then(({ rows }) => addPost(text_content, rows[0].id))
+  const { text_content } = req.body;
+  const { handleUserID } = req;
+  addPost(text_content, handleUserID)
     .then(({ rows }) => {
       res.status(200).json({
         data: rows,
@@ -94,7 +83,8 @@ module.exports.addPostRouter = (req, res, next) => {
 // delete post
 module.exports.deletePostRouter = (req, res, next) => {
   const { postId } = req.body;
-  deletePost(postId)
+  const { handleUserID } = req;
+  deletePost(postId, handleUserID)
     .then(() => res.json({
       data: null,
       msg: 'success',
@@ -102,10 +92,10 @@ module.exports.deletePostRouter = (req, res, next) => {
     }))
     .catch(next);
 };
-
+// get user name
 module.exports.getUserName = (req, res, next) => {
-  const { userID } = req.body;
-  getUserById(userID)
+  const { handleUserID } = req;
+  getUserById(handleUserID)
     .then((results) => {
       if (!results.rowCount) {
         const err = new Error('');
@@ -122,9 +112,14 @@ module.exports.getUserName = (req, res, next) => {
     .catch(next);
 };
 
+// logout function
 module.exports.logoutFunction = (req, res) => {
-  res.clearCookie('userToken').redirect('/login');
+  res
+    .clearCookie('userToken')
+    .json({ data: null, status: 200, msg: 'logged out successfully' });
 };
+
+// login function
 module.exports.loginFunction = (req, res, next) => {
   const { userEmail, userPassword } = req.body;
   const errors = validateLogin(userEmail, userPassword);
@@ -136,16 +131,14 @@ module.exports.loginFunction = (req, res, next) => {
   return getUserByEmail(userEmail)
     .then((result) => {
       if (!result.rowCount) {
-        const err = new Error();
-        err.status = 404;
-        err.msg = 'User not found';
-        throw err;
+        throw createCustomError({ status: 400, message: 'User not found' });
       }
       return result;
     })
     .then((result) => {
       const storedPassword = result.rows[0].user_password;
       const userID = result.rows[0].id;
+      sign(storedPassword).then((hash) => console.log(hash));
       return Promise.all([
         validate(userPassword, storedPassword),
         Promise.resolve(userID),
@@ -153,17 +146,20 @@ module.exports.loginFunction = (req, res, next) => {
     })
     .then((results) => {
       if (!results[0]) {
-        const err = new Error();
-        err.status = 401;
-        err.msg = 'Password incorrect';
-        throw err;
+        throw createCustomError({ status: 401, message: 'Password incorrect' });
       }
-      const token = jwtSign({ userID: results[1] });
-      res.cookie('userToken', token).redirect('/home');
+      return jwtSign({ userID: results[1] }, { expiresIn: '24h' });
     })
+    .then((token) => res
+      .cookie('userToken', token, {
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+      })
+      .json({ data: null, msg: 'logged in successfully', status: 200 }))
     .catch(next);
 };
 
+// register function
 module.exports.register = (req, res, next) => {
   const {
     userName, userEmail, userPassword, userPassword2,
@@ -185,15 +181,20 @@ module.exports.register = (req, res, next) => {
     .then((results) => {
       const hashedPassword = results[0];
       const userID = results[1];
-      if (!userID.rowCount) {
-        return addUser(userName, userEmail, hashedPassword);
+      if (userID.rowCount) {
+        throw createCustomError({
+          status: 400,
+          message: 'Your already registered',
+        });
       }
-      const err = new Error('');
-      err.status = 400;
-      err.msg = 'Your already registered';
-      throw err;
+      return addUser(userName, userEmail, hashedPassword);
     })
-    .then((userID) => jwtSign({ userID: userID.rows[0].id }))
-    .then((token) => res.cookie('userToken', token).redirect('/home'))
+    .then((userID) => jwtSign({ userID: userID.rows[0].id }, { expiresIn: '24h' }))
+    .then((token) => res
+      .cookie('userToken', token, {
+        secure: process.env.NODE_ENV === 'production',
+        httpOnly: true,
+      })
+      .json({ data: null, status: 200, msg: 'success registration' }))
     .catch(next);
 };

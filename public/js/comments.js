@@ -8,10 +8,6 @@ const createCommentInput = (postId) => {
   const form = document.createElement('form');
   form.classList.add('add-comment-form');
   form.method = 'POST';
-  const userNameInput = document.createElement('input');
-  userNameInput.id = 'userNameInput';
-  userNameInput.classList.add('user-name-input', 'form-control');
-  userNameInput.placeholder = 'Enter your user name';
   const textContentInput = document.createElement('textarea');
   textContentInput.placeholder = 'Enter your comment here ...';
   textContentInput.classList.add('add-comment-text-area', 'form-control');
@@ -21,18 +17,18 @@ const createCommentInput = (postId) => {
   commentSendButton.innerText = 'Add Comment';
   commentSendButton.addEventListener('click', (e) => {
     e.preventDefault();
-    sendComment(postId, userNameInput.value, textContentInput.value);
+    sendComment(postId, textContentInput.value);
   });
-  form.append(userNameInput, textContentInput, commentSendButton);
+  form.append(textContentInput, commentSendButton);
   div.appendChild(form);
   return div;
 };
 
-const sendComment = (postId, userNameInput, textContentInput) => {
-  if (!userNameInput.trim() || !textContentInput.trim()) {
+const sendComment = (postId, textContentInput) => {
+  if (!textContentInput.trim()) {
     return;
   }
-  fetch(`/api/v1/add-comment/${postId}/${userNameInput}`, {
+  fetch(`/api/v1/add-comment/${postId}`, {
     method: 'POST',
     body: JSON.stringify({ text_content: textContentInput }),
     headers: {
